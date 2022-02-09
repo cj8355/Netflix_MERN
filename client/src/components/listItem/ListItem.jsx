@@ -3,14 +3,30 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import AddIcon from '@mui/icons-material/Add';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbDownAltOutlinedIcon from '@mui/icons-material/ThumbDownAltOutlined';
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 
 
-export default function ListItem({index}) {
+export default function ListItem({index, item}) {
   const [isHovered, setIsHovered] = useState(false);
+  const [movie, setMovie] = useState({});
   
-  
+  useEffect(() => {
+    const getMovie = async () => {
+      try {
+        const res = await axios.get("/movies/find/" + item, {
+          headers:{
+            token: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZmEyMWVhMTBiOTI4YzYwYTMxYzRjMCIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY0NDM4MzMyMCwiZXhwIjoxNjQ0ODE1MzIwfQ.NjmQW_wl8Orqb0s_JGsBlzcMAWobtrqAqvnTjQCYkcY"
+          },
+        });
+        setMovie(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getMovie()
+  }, [item]);
 
   return (
 
@@ -19,10 +35,10 @@ export default function ListItem({index}) {
       style={{left: isHovered && index * 225 - 50 + index * 2.5}}
       onMouseEnter={() => setIsHovered(true)} 
       onMouseLeave={() => setIsHovered(false)}>
-        <img src="assets/images/community01.jfif" alt="" />
+        <img src={movie.img} alt="" />
         {isHovered && (
           <>
-          <iframe className="video" src="https://www.youtube.com/embed/qBr_i-pCvy0?autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope" allowfullscreen></iframe>
+          <iframe className="video" src={movie.trailer} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope" allowfullscreen></iframe>
           
           <div className="itemInfo">
             <div className="icons">
@@ -33,12 +49,12 @@ export default function ListItem({index}) {
   
             </div>
             <div className="itemInfoTop">
-              <span>1 hour 5 mins</span>
-              <span className="limit">+16</span>
-              <span>1999</span>
+              <span>{movie.duration}</span>
+              <span className="limit">+{movie.limit}</span>
+              <span>{movie.year}</span>
             </div>
-            <div className="desc">This is the Description222</div>
-            <div className="genre">Action</div>
+            <div className="desc">{movie.desc}</div>
+            <div className="genre">{movie.genre}</div>
           </div></>
 
         )}
