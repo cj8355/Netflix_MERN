@@ -1,8 +1,29 @@
 import "./featured.scss";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function Featured({type}) {
+  const [content, setContent] = useState({});
+
+  useEffect(() => {
+    const getRandomContent = async () => {
+      try {
+        const res = await axios.get(`/movies/random?type=${type}`, {
+          headers:{
+            token: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZmEyMWVhMTBiOTI4YzYwYTMxYzRjMCIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY0NDM4MzMyMCwiZXhwIjoxNjQ0ODE1MzIwfQ.NjmQW_wl8Orqb0s_JGsBlzcMAWobtrqAqvnTjQCYkcY"
+          },
+        });
+        setContent(res.data[0]);
+      } catch(err) {
+        console.log(err);
+      }
+    };
+    getRandomContent();
+  }, [type]);
+  
+
   return (
   <div className="featured">
     {type && (
@@ -27,10 +48,10 @@ export default function Featured({type}) {
         </select>
       </div>
     )}
-<img src="https://images.pexels.com/photos/6899260/pexels-photo-6899260.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" alt="" />
+<img src={content.img} alt="" />
   <div className="info">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCxulcbycT6G_crbsRuc4KeLos0ffmnvP95g&usqp=CAU" alt="" />
-    <span className="desc">loremiewfdv</span>
+    <img src={content.imgTitle} alt="" />
+    <span className="desc">{content.desc}</span>
     <div className="buttons">
       <button className="play">
         <PlayArrowIcon />

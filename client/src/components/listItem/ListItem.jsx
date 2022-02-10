@@ -5,6 +5,7 @@ import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbDownAltOutlinedIcon from '@mui/icons-material/ThumbDownAltOutlined';
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Link, Navigate } from 'react-router-dom';
 
 
 
@@ -29,6 +30,7 @@ export default function ListItem({index, item}) {
   }, [item]);
 
   return (
+    <Link to={{pathname:"/watch", movie: movie}}>
 
     <div 
       className="listItem" 
@@ -38,7 +40,7 @@ export default function ListItem({index, item}) {
         <img src={movie.img} alt="" />
         {isHovered && (
           <>
-          <iframe className="video" src={movie.trailer} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope" allowfullscreen></iframe>
+          <video src={movie.trailer} autoPlay={true} loop type="video/mp4"/>
           
           <div className="itemInfo">
             <div className="icons">
@@ -60,5 +62,6 @@ export default function ListItem({index, item}) {
         )}
         
     </div>
+    </Link>
     );
 }
