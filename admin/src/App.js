@@ -23,6 +23,7 @@ import NewMovie from "./pages/newMovie/NewMovie";
 import axios from "axios";
 
 function App() {
+  const { user } = useContext(AuthContext);
   
   return (
     <Router>
