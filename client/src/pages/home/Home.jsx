@@ -7,14 +7,17 @@ import axios from 'axios';
 
 export default function Home({type}) {
   const [lists, setLists] = useState([]);
+  const [genre, setGenre] = useState(null);
 
   useEffect(() => {
     const getRandomLists = async () => {
       try {
-        const res = await axios.get(`lists${type ? "?type=" + type : ""}`,
+        const res = await axios.get(`lists${type ? "?type=" + type : ""}${
+          genre ? "&genre=" + genre : ""
+        }`,
         {
           headers:{
-            token: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxZmEyMWVhMTBiOTI4YzYwYTMxYzRjMCIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY0NDM4MzMyMCwiZXhwIjoxNjQ0ODE1MzIwfQ.NjmQW_wl8Orqb0s_JGsBlzcMAWobtrqAqvnTjQCYkcY"
+            token:  "Bearer "+JSON.parse(localStorage.getItem("user")).accessToken,
           },
         });
         console.log(res.data);
@@ -25,11 +28,11 @@ export default function Home({type}) {
       }
     };
     getRandomLists();
-  }, [type])
+  }, [type, genre])
   return (
       <div className="home">
           <Navbar />
-          <Featured type={type}/>
+          <Featured type={type} setGenre={setGenre}/>
           {lists.map((list) => (
             <List list={list} />
           ))}
